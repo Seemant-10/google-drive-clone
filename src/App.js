@@ -13,8 +13,10 @@ function App() {
   return (
     <div className="App">
         <Header></Header>
-        <SideBar></SideBar>
-        <FileList></FileList>
+        <div className='app_main'>
+          <SideBar></SideBar>
+          <FileList></FileList>
+        </div>
         {/* auth = true*/}
         {/*  no auth = log in */}
     </div>

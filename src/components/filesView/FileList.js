@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import '../../styles/fileList.css'
 
 const FileList = () => {
   const [files, setFiles] = useState([]);
@@ -21,15 +22,9 @@ const FileList = () => {
     // 🖼️ Image preview
     if (["jpg", "jpeg", "png", "gif", "webp"].includes(format)) {
       return (
-        <img
+        <img className="img_render"
           src={file.secure_url}
           alt={file.original_filename}
-          style={{
-            width: "100%",
-            height: "150px",
-            objectFit: "cover",
-            borderRadius: "6px",
-          }}
         />
       );
     }
@@ -37,16 +32,11 @@ const FileList = () => {
     // 📄 PDF preview (via Google Docs Viewer)
     if (format === "pdf" || file.secure_url.endsWith(".pdf")) {
       return (
-        <iframe
+        <iframe className="pdf_render"
           src={file.secure_url + "#view=FitH"}
           title={file.original_filename}
           width="100%"
           height="150px"
-          style={{
-            border: "1px solid #ccc",
-            borderRadius: "6px",
-            pointerEvents: "none", // 🔒 makes it unscrollable/unselectable
-          }}
         />
       );
     }
@@ -54,29 +44,16 @@ const FileList = () => {
     // 🎥 Video preview (optional)
     if (type === "video") {
       return (
-        <video
+        <video className="video_render"
           src={file.secure_url}
           controls
-          style={{ width: "100%", height: "150px", borderRadius: "6px" }}
         />
       );
     }
 
     // 📦 Fallback: gray box
     return (
-      <div
-        style={{
-          width: "100%",
-          height: "150px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: "#f0f0f0",
-          borderRadius: "6px",
-          fontSize: "14px",
-          color: "#777",
-        }}
-      >
+      <div className="fallback">
         {format.toUpperCase() || "FILE"}
       </div>
     );
@@ -90,8 +67,26 @@ const FileList = () => {
     window.open(file.secure_url, "_blank");
   };
 
+  const formatFileSize = (bytes) => {
+    if (bytes === 0) return "0 B";
+    const units = ["B", "KB", "MB", "GB", "TB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(1024));
+    const size = bytes / Math.pow(1024, i);
+    return `${size.toFixed(1)} ${units[i]}`;
+  };
+
+  const formatDateOnly = (dateString) => {
+    const date = new Date(dateString);
+    if (isNaN(date)) return "Unknown";
+    return date.toLocaleDateString(undefined, {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
   return (
-    <div style={{ padding: "20px" }}>
+    <div className="file_main">
       <h3>Uploaded Files</h3>
       <div
         style={{
@@ -138,8 +133,21 @@ const FileList = () => {
                   file.original_filename ||
                   decodeURIComponent(file.public_id.split("/").pop())}              
               </div>
-              <div style={{ fontSize: "0.8em", color: "#555" }}>
-                {(file.bytes / 1024).toFixed(1)} KB
+              <div style={{
+                display: "flex",
+                justifyContent: "space-around"
+              }}>
+                <div style={{ fontSize: "0.8em", color: "#555" }}>
+                  {formatFileSize(file.bytes || file.size)}
+                </div>
+
+                <div style={{ fontSize: "0.75em", color: "#777" }}>
+                  {file.created_at
+                    ? formatDateOnly(file.created_at)
+                    : file.uploadedAt
+                    ? formatDateOnly(file.uploadedAt)
+                    : "Unknown"}
+                </div>
               </div>
             </div>
           </div>
