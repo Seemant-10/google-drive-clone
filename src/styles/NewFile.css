@@ -1,0 +1,35 @@
+.newFile{
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    padding-left: 20px;
+}
+
+.newFile_container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px 20px;
+    border-radius: 17px;
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,0.302), 0 1px 3px 1px rgba(60,64,67,0.149);
+    cursor: pointer;
+}
+
+.newFile_container:hover{
+    background-color: #EDF1FA;
+    box-shadow: 0 1px 5px 0 rgba(60,64,67,0.302), 0 1px 5px 1px rgba(60,64,67,0.149);
+}
+
+.newFile_container>p{
+    margin-left: 14px;
+    font-weight: 500;
+}
+
+.upload-message {
+  margin-top: 10px;
+  font-weight: 500;
+  color: #2e7d32; /* green for success */
+}
+.upload-message:has(> .error) {
+  color: #c62828; /* red for error */
+}
