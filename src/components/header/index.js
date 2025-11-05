@@ -98,6 +98,7 @@ const Header = ({ setUser }) => {
                   borderRadius: "50%",
                   objectFit: "cover",
                   cursor: "pointer",
+                  marginRight: "-35px",
                 }}
                 onClick={() => setShowMenu((prev) => !prev)}
               />

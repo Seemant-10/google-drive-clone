@@ -134,6 +134,78 @@ app.get("/files", async (req, res) => {
   }
 });
 
+//Delete file endpoint
+app.post("/delete", async (req, res) => {
+  try {
+    const { public_id, userEmail } = req.body;
+
+    if (!public_id || !userEmail) {
+      return res.status(400).json({ error: "Missing public_id or userEmail" });
+    }
+
+    console.log(`🗑️ Delete request from ${userEmail} for: ${public_id}`);
+
+    // Detect file type from its Cloudinary path or extension
+    let resourceType = "image";
+    if (public_id.endsWith(".pdf") || public_id.endsWith(".zip") || public_id.endsWith(".txt")) {
+      resourceType = "raw";
+    } else if (public_id.match(/\.(mp4|mov|avi|mkv)$/i)) {
+      resourceType = "video";
+    }
+
+    // Delete from Cloudinary with proper resource_type
+    const result = await cloudinary.uploader.destroy(public_id, { resource_type: resourceType });
+
+    if (result.result !== "ok") {
+      console.error("❌ Cloudinary delete failed:", result);
+      return res.status(500).json({ error: "Failed to delete from Cloudinary" });
+    }
+
+    console.log(`✅ File deleted successfully (${resourceType}): ${public_id}`);
+    res.json({ success: true, message: "File deleted successfully." });
+
+  } catch (err) {
+    console.error("❌ Delete error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+
+// Delete File
+// app.delete("/delete", async (req, res) => {
+//   console.log("🧠 Delete request received:", req.body);
+//   try {
+//     const { public_id, userEmail } = req.body;
+
+//     if (!public_id || !userEmail) {
+//       return res.status(400).json({ error: "Missing file or user info" });
+//     }
+
+//     const sanitizedUser = userEmail.replace(/[@.]/g, "_");
+
+//     // Ensure this file belongs to the requesting user
+//     if (!public_id.startsWith(`drive-clone/${sanitizedUser}/`)) {
+//       return res.status(403).json({ error: "Unauthorized file access" });
+//     }
+
+//     const result = await cloudinary.uploader.destroy(public_id, {
+//       invalidate: true,
+//       resource_type: "auto", // auto handles image, video, raw
+//     });
+
+//     if (result.result === "not found") {
+//       return res.status(404).json({ error: "File not found" });
+//     }
+
+//     console.log(`🗑️ Deleted ${public_id} for user ${userEmail}`);
+//     res.status(200).json({ success: true, result });
+//   } catch (err) {
+//     console.error("❌ Delete error:", err);
+//     res.status(500).json({ error: "Failed to delete file" });
+//   }
+// });
+
 app.post("/invalidate", async (req, res) => {
   try {
     const { public_id } = req.body;

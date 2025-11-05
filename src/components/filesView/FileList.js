@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import '../../styles/fileList.css'
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const FileList = ({ reload }) => {
   const [files, setFiles] = useState([]);
@@ -104,6 +105,45 @@ const FileList = ({ reload }) => {
     });
   };
 
+  const handleDelete = async (file) => {
+    const confirmDelete = window.confirm(`Delete ${file.public_id}?`);
+    if (!confirmDelete) return;
+
+    const userEmail = localStorage.getItem("userEmail");
+    if (!userEmail) {
+      alert("You must be logged in to delete files.");
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:5000/delete", {
+        method: "POST", // 👈 CHANGE to POST for reliability
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          public_id: file.public_id,
+          userEmail,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        console.log("🗑️ File deleted:", data);
+        setFiles((prev) => prev.filter((f) => f.public_id !== file.public_id));
+        alert("✅ File deleted successfully!");
+      } else {
+        console.error("Delete failed:", data);
+        alert(`❌ Delete failed: ${data.error}`);
+      }
+    } catch (error) {
+      console.error("Error deleting:", error);
+      alert("⚠️ Network error during delete.");
+    }
+  };
+
+
   return (
     <div className="file_main">
       <h3>Uploaded Files</h3>
@@ -168,6 +208,27 @@ const FileList = ({ reload }) => {
                     : "Unknown"}
                 </div>
               </div>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                marginBottom: "5px",
+              }}
+            >
+              <DeleteIcon
+                onClick={(e) => {
+                  e.stopPropagation(); // prevent opening file
+                  handleDelete(file);
+                }}
+                style={{
+                  cursor: "pointer",
+                  color: "#d32f2f",
+                  fontSize: "20px",
+                  opacity: "0.8",
+                }}
+                titleAccess="Delete File"
+              />
             </div>
           </div>
         ))}
