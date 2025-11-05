@@ -1,6 +1,5 @@
-.sideBar{
-    width: 20%;
-    height: 10vh;
+.sideBarItem{
     margin-left: 20px;
+    cursor: pointer;
 }
 

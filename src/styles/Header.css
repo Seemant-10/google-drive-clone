@@ -13,6 +13,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
 }
 
 .header_logo>img {
@@ -84,6 +85,13 @@
 
 .header_icons .MuiSvgIcon-root{
     font-size: 28px;
-    color: rgb(82,82,82);
-    margin: 4px;
+    padding: 5px 7px;
+}
+.header_icons_inner_gemini{
+    padding: 5px 7px;
+}
+.header_icons_inner:hover,.header_icons_inner_gemini:hover{
+    border-radius: 50%;
+    background-color: #DADCDE;
+    cursor: pointer;
 }

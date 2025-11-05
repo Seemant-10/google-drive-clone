@@ -9,7 +9,7 @@
 .pdf_render{
     border: 1px solid #ccc;
     border-radius: 6px;
-    pointer-events: none;
+    /* pointer-events: none; */
 }
 
 .video_render{
@@ -33,7 +33,7 @@
 .file_main{
     padding: 20px; 
     background-color: white; 
-    height: 100vh;
+    height: 82vh;
     width: 100%;
     border-radius: 15px;
 }

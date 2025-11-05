@@ -1,25 +1,37 @@
 import React, { useEffect, useState } from "react";
 import '../../styles/fileList.css'
 
-const FileList = () => {
+const FileList = ({ reload }) => {
   const [files, setFiles] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/files")
+    const userEmail = localStorage.getItem("userEmail"); // same key used during login
+
+    if (!userEmail) {
+      console.warn("⚠️ No user email found — cannot fetch files.");
+      setFiles([]);
+      return;
+    }
+
+    fetch("http://localhost:5000/files", {
+      headers: {
+        "x-user-email": userEmail,
+      },
+    })
       .then((res) => res.json())
       .then((data) => {
-        console.log("Fetched files:", data);
+        console.log("Fetched files for user:", userEmail, data);
         setFiles(Array.isArray(data) ? data : []);
       })
       .catch((err) => console.error("Error fetching files:", err));
-  }, []);
+  }, [reload]);
 
   // Very simple preview placeholder (icon-like)
   const renderPlaceholder = (file) => {
     const format = file.format ? file.format.toLowerCase() : "";
-    const type = file.resource_type;
+    // const type = file.resource_type;
 
-    // 🖼️ Image preview
+    // Image preview
     if (["jpg", "jpeg", "png", "gif", "webp"].includes(format)) {
       return (
         <img className="img_render"
@@ -29,10 +41,11 @@ const FileList = () => {
       );
     }
 
-    // 📄 PDF preview (via Google Docs Viewer)
+    // PDF preview (via Google Docs Viewer)
     if (format === "pdf" || file.secure_url.endsWith(".pdf")) {
       return (
-        <iframe className="pdf_render"
+        <iframe 
+          className="pdf_render"
           src={file.secure_url + "#view=FitH"}
           title={file.original_filename}
           width="100%"
@@ -41,17 +54,7 @@ const FileList = () => {
       );
     }
 
-    // 🎥 Video preview (optional)
-    if (type === "video") {
-      return (
-        <video className="video_render"
-          src={file.secure_url}
-          controls
-        />
-      );
-    }
-
-    // 📦 Fallback: gray box
+    // Fallback: gray box
     return (
       <div className="fallback">
         {format.toUpperCase() || "FILE"}
@@ -60,11 +63,27 @@ const FileList = () => {
   };
 
 
-  // ✅ Always opens file in new tab
+  // Always opens file in new tab
   const handleOpen = (file) => {
-    // always open the secure_url returned by Cloudinary
-    // this works if Cloudinary account allows PDF delivery
-    window.open(file.secure_url, "_blank");
+    const url = file.secure_url;
+    const format = file.format ? file.format.toLowerCase() : "";
+    const type = file.resource_type;
+
+    // Image — open directly in new tab
+    if (type === "image" || ["jpg", "jpeg", "png", "gif", "webp"].includes(format)) {
+      window.open(url, "_blank");
+      return;
+    }
+
+    // PDF or document — use Google Docs Viewer
+    if (["pdf", "doc", "docx"].includes(format)) {
+      const viewer = `https://docs.google.com/gview?url=${encodeURIComponent(url)}&embedded=true`;
+      window.open(viewer, "_blank");
+      return;
+    }
+
+    // Default fallback
+    window.open(url, "_blank");
   };
 
   const formatFileSize = (bytes) => {

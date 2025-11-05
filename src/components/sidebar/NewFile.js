@@ -4,7 +4,7 @@ import AddIcon from "@mui/icons-material/Add";
 import Modal from "@mui/material/Modal";
 import { Box, Button, Typography } from "@mui/material";
 
-const NewFile = () => {
+const NewFile = ({ onUploadSuccess }) => {
   const [open, setOpen] = useState(false);
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
@@ -19,9 +19,24 @@ const NewFile = () => {
 
   const handleChange = (e) => setFile(e.target.files[0]);
 
-  const handleUpload = async () => {
+    const handleUpload = async () => {
     if (!file) {
       setMessage("⚠️ Please select a file first.");
+      return;
+    }
+
+    // ✅ Basic file validation
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "application/zip",
+    ];
+    if (!allowedTypes.includes(file.type)) {
+      setMessage("❌ Unsupported file type.");
       return;
     }
 
@@ -30,32 +45,39 @@ const NewFile = () => {
 
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET);
-    // optional metadata
-    formData.append("context", `file_name=${file.name}|file_type=${file.type}`);
+
+    const userEmail = localStorage.getItem("userEmail");
+    console.log("📤 Upload initiated for:", userEmail, "file:", file.name);
 
     try {
       const res = await fetch("http://localhost:5000/upload", {
         method: "POST",
+        headers: {
+          "x-user-email": userEmail || "",
+          Accept: "application/json",
+        },
         body: formData,
       });
 
       const data = await res.json();
+
       if (res.ok) {
-        console.log("✅ Uploaded:", data);
+        console.log("✅ Uploaded successfully:", data);
         setMessage("✅ Upload successful!");
-        setTimeout(() => setOpen(false), 1500);
+        if (onUploadSuccess) onUploadSuccess();
+        setTimeout(() => setOpen(false), 1200);
       } else {
-        console.error("Upload failed:", data);
-        setMessage("❌ Upload failed.");
+        console.error("❌ Upload failed:", data.error || data);
+        setMessage(`❌ Upload failed: ${data.error || "Unknown error"}`);
       }
     } catch (error) {
-      console.error("Error uploading:", error);
-      setMessage("⚠️ Error during upload.");
+      console.error("⚠️ Upload error:", error);
+      setMessage("⚠️ Network or server error.");
     } finally {
       setUploading(false);
     }
   };
+
 
   return (
     <div className="newFile">
@@ -82,7 +104,11 @@ const NewFile = () => {
           <Typography variant="h6" fontWeight={600} gutterBottom>
             Upload a File
           </Typography>
-
+          {file && (
+            <Typography sx={{ fontSize: "0.8em", mt: 1, color: "#555" }}>
+              Selected: {file.name}
+            </Typography>
+          )}
           {uploading ? (
             <Typography color="primary" sx={{ mt: 2 }}>
               Uploading...

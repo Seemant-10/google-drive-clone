@@ -1,5 +1,4 @@
 import React from 'react'
-import NewFile from './NewFile'
 import SideBarItem from './SideBarItem'
 import '../../styles/Sidebar.css'
 
@@ -16,7 +15,6 @@ import CloudOutlinedIcon from '@mui/icons-material/CloudOutlined';
 const index = () => {
   return (
     <div className='sideBar'>
-        <NewFile></NewFile>
         <div className='sideBar_itemsContainer'>
             <SideBarItem icon = {(<HomeOutlinedIcon></HomeOutlinedIcon>)} label = {'Home'}></SideBarItem>
             <SideBarItem arrow icon = {(<InsertDriveFileIcon></InsertDriveFileIcon>)} label = {'My Drive'}></SideBarItem>

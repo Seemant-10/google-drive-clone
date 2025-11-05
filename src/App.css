@@ -1,3 +1,9 @@
 .app_main{
     display: flex;
 }
+.app{
+    background-color: #F8FAFD;
+}
+.app_sidebar{
+    width: 20%;
+}
