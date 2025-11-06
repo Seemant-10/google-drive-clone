@@ -117,7 +117,7 @@ const FileList = ({ reload }) => {
 
     try {
       const res = await fetch("http://localhost:5000/delete", {
-        method: "POST", // 👈 CHANGE to POST for reliability
+        method: "POST", // CHANGE to POST for reliability
         headers: {
           "Content-Type": "application/json",
         },
