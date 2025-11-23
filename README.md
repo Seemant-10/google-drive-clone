@@ -1,70 +1,191 @@
-# Getting Started with Create React App
+🧭 Google Drive Clone (Full-Stack)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A full-stack Google Drive Clone built using React, Node.js (Express), Firebase Authentication, and Cloudinary for secure file storage, preview, and management.
+It supports multi-user accounts, Google sign-in, upload, view, and delete files, and user-specific file segregation — all in a sleek, responsive UI.
 
-## Available Scripts
+🚀 Features
 
-In the project directory, you can run:
+✅ Google Authentication
 
-### `npm start`
+Sign in securely with your Google account via Firebase.                                                                                                                                                            
+Displays user profile photo, name, and email in the header.	                                                                                                                                                       
+Supports multiple accounts — each user's files are isolated.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+✅ File Uploads
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Upload images, PDFs, Word, ZIP, and video files.                                                                                                                                                                    
+Automatically stored under each user’s unique folder on Cloudinary.                                                                                                                                                
+Files appear instantly after upload (no page reload needed).																																																																												
 
-### `npm test`
+✅ File Preview
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Inline previews for images.                                                                                                                                                                                        
+PDFs and Word docs open via Google Docs Viewer.                                                                                                                                                                    
+Other file types open in a new tab.																																																																																									
 
-### `npm run build`
+✅ File Management
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Delete files from Cloudinary with confirmation.                                                                                                            
+Only the file owner can delete their own files.                                                                                                
+Backend ensures safe user-specific operations.																				
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+✅ Dynamic Fetching
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Auto-refreshes file list after upload/delete.                                                                                                            
+Clean grid layout for better visual organization.																																																																																		
 
-### `npm run eject`
+✅ Environment Security
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Secrets stored securely in .env.local files (not committed to GitHub).                                                                                            
+Cloudinary and Firebase credentials loaded via environment variables.																																																																								
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+🏗️ Tech Stack
+Layer	Technology                                                                                                                                                                              
+Frontend	     :  React, Material UI, Firebase Auth                                                                                                                                
+Backend	       :  Node.js, Express, Multer                                                                                                                                            
+Storage	       :  Cloudinary (for file storage)                                                                                                                              
+Authentication :  Firebase Google Sign-In                                                                                                                                            
+Styling        :	CSS (custom + MUI components)                                                                                                                      
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+📂 Folder Structure                                                                                                                                                                    
+Google-Drive-Clone/                                                                                                                                                                                                
+│                                                                                                                                                                                                                   
+├── public/                                                                                                                                                                                                        
+├── src/                                                                                                                                                                                                            
+│   ├── components/                                                                                                                                                                                                 
+│   │   ├── auth /                          # Login component                                                                                                                                                
+│   │   ├── backend/                        # Express server files                                                                                                                                                
+│   │   │   ├── server.js                                                                                                                                                                                        
+│   │   │   ├── .env.local                                                                                                                                                                
+│   │   ├── filesView/          # FileList.js (file preview + delete)                                                                                                                 
+│   │   ├── header/             # Header with profile and search                                                                                                                                        
+│   │   ├── sidebar/            # Sidebar + NewFile upload modal                                                                                                                                                
+│   │   ├── rightSidebar/       # Additional UI placeholder                                                                                                                                        
+│   ├── styles/                 # CSS for components                                                                                                                                                
+│   ├── firebase.js             # Firebase configuration                                                                                                                                                
+│   ├── App.js                  # Main app logic (auth + routing)                                                                                                                                        
+│   └── index.js                # React root entry point                                                                                                                                                        
+│                                                                                                                                                                                                        
+├── .env.local                  # Frontend environment variables                                                                                                                                                
+├── .gitignore                  # Excludes secrets & node_modules                                                                                                                                                
+├── README.md                                                                                                                                                                                                       
+└── package.json                                                                                                                                                                                                
+                                                                                                                                                                                                                
+⚙️ Environment Variables
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+You’ll need two .env.local files:
 
-## Learn More
+Frontend → in root /
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Backend → in /src/components/backend/
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+🧩 Frontend .env.local
+# Firebase Config
+REACT_APP_FIREBASE_API_KEY=your_firebase_api_key                                                                                                                                                                
+REACT_APP_FIREBASE_AUTH_DOMAIN=your_firebase_auth_domain                                                                                                                                                        
+REACT_APP_FIREBASE_PROJECT_ID=your_firebase_project_id                                                                                                                                                              
+REACT_APP_FIREBASE_STORAGE_BUCKET=your_firebase_storage_bucket                                                                                                                                                
+REACT_APP_FIREBASE_MESSAGING_SENDER_ID=your_firebase_messaging_sender_id                                                                                                                                        
+REACT_APP_FIREBASE_APP_ID=your_firebase_app_id                                                                                                                                                                
+REACT_APP_FIREBASE_MEASUREMENT_ID=your_firebase_measurement_id                                                                                                                                                      
 
-### Code Splitting
+🧠 Backend .env.local                                                                                                                                                                                        
+CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name                                                                                                                                                                    
+CLOUDINARY_API_KEY=your_cloudinary_api_key                                                                                                                                                                        
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret                                                                                                                                                                    
+PORT=5000                                                                                                                                                                        
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-### Analyzing the Bundle Size
+⚠️ Add both .env.local files to .gitignore to prevent secret leaks.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+🪄 Getting Started                                                                                                                                                                                
+1️⃣ Clone the repo                                                                                                                                                                
+git clone https://github.com/your-username/google-drive-clone.git                                                                                                                                        
+cd google-drive-clone                                                                                                                                                                        
 
-### Making a Progressive Web App
+2️⃣ Install Dependencies                                                                                                                                                        
+# Frontend
+npm install
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+# Backend
+cd src/components/backend
+npm install
 
-### Advanced Configuration
+3️⃣ Start the Backend Server
+cd src/components/backend
+node server.js
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-### Deployment
+The backend will run at 👉 http://localhost:5000
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+4️⃣ Start the Frontend
 
-### `npm run build` fails to minify
+In a new terminal:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+npm start
+
+
+The frontend runs at 👉 http://localhost:3000
+
+🔐 Authentication (Firebase Setup)
+
+Go to Firebase Console
+
+Create a new project → enable Google Sign-In under
+Authentication → Sign-in Method → Google.
+
+Copy the configuration keys into .env.local (frontend).
+
+Add http://localhost:3000 to Authorized Domains.
+
+☁️ Cloudinary Setup
+
+Create a Cloudinary Account
+
+Go to Dashboard → API Keys and copy:
+
+Cloud name
+
+API key
+
+API secret
+
+Paste these into your backend .env.local.
+
+Each user’s files are automatically stored in their own sub-folder:
+
+drive-clone/{user_email_sanitized}/
+
+🧹 Core API Routes                                                                                                                                                                                                
+Method	Endpoint	Description                                                                                                                                                                                
+POST	/upload	Uploads a file to Cloudinary for a specific user                                                                                                                                                    
+GET	/files	Fetches all files for the logged-in user                                                                                                                                                            
+POST	/delete	Deletes a specific file from Cloudinary                                                                                                                                                             
+💡 Known Enhancements (Next Steps)
+
+🧾 Add renaming or folder management
+
+💬 Replace alerts with Material UI Snackbars
+
+📦 Implement pagination or lazy loading
+
+🔍 Add file search functionality
+
+⏳ Add upload progress bar
+
+🧠 Key Learnings
+
+Integration of Firebase Auth with custom Node.js backend.
+
+Securely managing API keys using .env.local.
+
+Handling multi-user file segregation using dynamic Cloudinary folders.
+
+Rendering inline file previews and Google Docs Viewer.
+
+Proper handling of resource types (image, raw, video) for upload/delete.
+
+👨‍💻 Author
+
+Seemant Gupta
+💼 Full Stack Developer | 🚀 Cloud & Web Enthusiast                                                                                                                                                                
